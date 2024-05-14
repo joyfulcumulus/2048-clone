@@ -4,8 +4,22 @@ const CELL_GAP = 2
 
 export default class Grid {
   constructor(gridElement) {
+    // set layout of gameboard in css
     gridElement.style.setProperty("--grid-size", GRID_SIZE)
     gridElement.style.setProperty("--cell-size", `${CELL_SIZE}vmin`)
     gridElement.style.setProperty("--cell-gap", `${CELL_GAP}vmin`)
+    // create divs with class "cell" in gameboard dynamically based on grid_size
+    createCellElements(gridElement)
   }
+}
+
+function createCellElements(gridElement) {
+  const cells = []
+  for (let i = 0; i < GRID_SIZE ** 2; i++) {
+    const cell = document.createElement("div")
+    cell.classList.add("cell")
+    cells.push(cell)
+    gridElement.append(cell)
+  }
+  return cells
 }
