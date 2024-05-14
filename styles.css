@@ -1,3 +1,4 @@
+/* styling for all elements and psuedo states */
 *, *::before, *::after {
   box-sizing: border-box;
   font-family: Arial;
@@ -34,11 +35,21 @@ body {
 }
 
 .tile {
+  --x: 1;
+  --y: 2;
+  --background-lightness: 80%;
+  --text-lightness: 20%;
+
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   width: var(--cell-size);
   height: var(--cell-size);
-  background-color: pink;
+  border-radius: 1vmin;
+  top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
+  left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
+  font-weight: bold;
+  background-color: hsl(200, 50%, var(--background-lightness));
+  color: hsl(200, 25%, var(--text-lightness));
 }
