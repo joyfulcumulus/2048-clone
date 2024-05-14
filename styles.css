@@ -1,0 +1,30 @@
+*::before, *::after {
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background-color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-size: 7.5vmin;
+}
+
+#game-board {
+  display: grid;
+  grid-template-rows: repeat(4, 20vmin);
+  grid-template-columns: repeat(4, 20vmin);
+  gap: 2vmin;
+  background: #CCC;
+  border-radius: 1vmin;
+  padding: 2vmin;
+  position: relative;
+}
+
+.cell {
+  background-color: #AAA;
+  border-radius: 1vmin;
+}
