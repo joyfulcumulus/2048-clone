@@ -3,13 +3,30 @@ const CELL_SIZE = 20
 const CELL_GAP = 2
 
 export default class Grid {
+  #cells
+
   constructor(gridElement) {
     // set layout of gameboard in css
     gridElement.style.setProperty("--grid-size", GRID_SIZE)
     gridElement.style.setProperty("--cell-size", `${CELL_SIZE}vmin`)
     gridElement.style.setProperty("--cell-gap", `${CELL_GAP}vmin`)
-    // create divs with class "cell" in gameboard dynamically based on grid_size
-    createCellElements(gridElement)
+    // create divs with class "cell" in gameboard based on grid_size
+    // create JS Cell object for each "cell" div using map
+    this.#cells = createCellElements(gridElement).map((cellElement, index) => {
+      return new Cell(cellElement, index % GRID_SIZE, Math.floor(index / GRID_SIZE))
+    })
+  }
+}
+
+class Cell {
+  #cellElement
+  #x
+  #y
+
+  constructor(cellElement, x, y) {
+    this.#cellElement = cellElement
+    this.#x = x
+    this.#y = y
   }
 }
 
@@ -21,5 +38,5 @@ function createCellElements(gridElement) {
     cells.push(cell)
     gridElement.append(cell)
   }
-  return cells
+  return cells // array output will be used in chained .map
 }
