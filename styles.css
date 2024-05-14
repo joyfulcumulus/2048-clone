@@ -35,10 +35,10 @@ body {
 }
 
 .tile {
-  --x: 1;
+  /* --x: 1;
   --y: 2;
   --background-lightness: 80%;
-  --text-lightness: 20%;
+  --text-lightness: 20%; */
 
   position: absolute;
   display: flex;
@@ -52,4 +52,14 @@ body {
   font-weight: bold;
   background-color: hsl(200, 50%, var(--background-lightness));
   color: hsl(200, 25%, var(--text-lightness));
+  animation: 200ms ease-in-out show;
+  transition: 100ms ease-in-out;
+}
+
+@keyframes show {
+  from {
+    opacity: 0.5;
+    transform: scale(0);
+  }
+  /* End state is the styled state of the element */
 }
