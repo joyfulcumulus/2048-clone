@@ -42,3 +42,33 @@ function handleInput(e) {
 function moveUp() {
   slideTiles(grid.cellsByColumn)
 }
+
+function slideTiles(cells) {
+  // for each cell i in the group (col / row), check for each previous cell j, if can accept a tile
+  // mark the cell that the tile can move to with lastValidCell
+  cells.forEach(group => {
+    for (let i = 1; i < group.length; i++) {
+      const cell = group[i]
+      let lastValidCell
+
+      for (let j = i - 1; j >= 0; j--) {
+        const moveToCell = group[j]
+        if (!moveToCell.canAccept(cell.tile)) break // if moveToCell cannot accept a tile, break the loop
+        lastValidCell = moveToCell // if moveToCell can accept, mark lastValidCell position
+      }
+
+      // if lastValidCell has a value (means there is a cell to move to)
+      // check if the cell is occupied by tile
+      // if it's occupid, merge, else, move the tile over by reassigning it
+      if (lastValidCell != null) {
+        if (lastValidCell.tile != null) {
+          lastValidCell.mergeTile = cell.tile
+        } else {
+        lastValidCell.tile = cell.tile
+        }
+        // remove tile from current cell by setting null
+        cell.tile = null
+      }
+    }
+  })
+}
