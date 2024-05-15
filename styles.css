@@ -15,6 +15,7 @@ body {
 }
 
 #game-board {
+  /* CSS variables will be set in javascript */
   display: grid;
   grid-template-rows: repeat(var(--grid-size), var(--cell-size));
   grid-template-columns: repeat(var(--grid-size), var(--cell-size));
@@ -31,11 +32,7 @@ body {
 }
 
 .tile {
-  /* --x: 1;
-  --y: 2;
-  --background-lightness: 80%;
-  --text-lightness: 20%; */
-
+  /* CSS variables will be set in javascript */
   position: absolute;
   display: flex;
   justify-content: center;

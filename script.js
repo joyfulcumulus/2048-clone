@@ -1,4 +1,5 @@
 import Grid from "./grid.js"
+import Tile from "./tile.js"
 
 // Get grid element from the HTML and create new Grid object in this HTML
 const gameBoard = document.getElementById("game-board")

@@ -46,10 +46,11 @@ class Cell {
   }
 
   set tile(value) {
-    this.#tile = value
+    this.#tile = value // can be a Tile object or null
     if (value == null) return // means this cell has no tile anymore
 
-    // if tile has value (e.g. 2, 4, 8) set its position to same x,y as its Cell
+    // if tile has a Tile object, set its position to same x,y as its Cell
+    // (Utilises the Tile class's x and y setter methods)
     this.#tile.x = this.#x
     this.#tile.y = this.#y
   }
