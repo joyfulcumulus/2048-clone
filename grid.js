@@ -42,6 +42,7 @@ class Cell {
   #x
   #y
   #tile
+  #mergeTile
 
   constructor(cellElement, x, y) {
     this.#cellElement = cellElement
@@ -69,6 +70,27 @@ class Cell {
     // (Utilises the Tile class's x and y setter methods)
     this.#tile.x = this.#x
     this.#tile.y = this.#y
+  }
+
+  get mergeTile () {
+    return this.#mergeTile
+  }
+
+  set mergeTile(value) {
+    this.#mergeTile = value
+    if (value == null) return
+    this.#mergeTile.x = this.#x
+    this.#mergeTile.y = this.#y
+  }
+
+  canAccept(tile) {
+    // accept conditions:
+    // 1. the cell instance has no tile OR
+    // 2. this cell's tile has same value as the tile passed in AND no merge done in earlier tiles of the group
+    return (
+      this.tile == null ||
+      (this.mergeTile == null && this.tile.value === tile.value)
+    )
   }
 }
 

@@ -44,8 +44,11 @@ function moveUp() {
 }
 
 function slideTiles(cells) {
-  // for each cell i in the group (col / row), check for each previous cell j, if can accept a tile
-  // mark the cell that the tile can move to with lastValidCell
+  // for each cell i in the group (col / row)
+  //   1. check for each previous cell j, if can accept a tile
+  //   2. mark the cell that the tile can move to with lastValidCell
+  //   3. then move the tile / or leave it if cant
+  // repeat steps 1-3 for next cell
   cells.forEach(group => {
     for (let i = 1; i < group.length; i++) {
       const cell = group[i]
@@ -72,3 +75,5 @@ function slideTiles(cells) {
     }
   })
 }
+
+// Note: canAccept is a Cell class method
