@@ -11,10 +11,21 @@ export default class Grid {
     gridElement.style.setProperty("--cell-size", `${CELL_SIZE}vmin`)
     gridElement.style.setProperty("--cell-gap", `${CELL_GAP}vmin`)
     // create divs with class "cell" in gameboard based on grid_size
-    // create JS Cell object for each "cell" div using map
+    // create an array of JS Cell objects using map, based on each "cell" div
     this.#cells = createCellElements(gridElement).map((cellElement, index) => {
       return new Cell(cellElement, index % GRID_SIZE, Math.floor(index / GRID_SIZE))
     })
+  }
+
+  // private getter to retrieve all empty cells (without tiles) as an array
+  get #emptyCells() {
+    return this.#cells.filter(cell => cell.tile == null)
+  }
+
+  // pick a random empty cell and return it
+  randomEmptyCell() {
+    const randomIndex = Math.floor(Math.random() * this.#emptyCells.length)
+    return this.#emptyCells[randomIndex]
   }
 }
 
@@ -22,11 +33,25 @@ class Cell {
   #cellElement
   #x
   #y
+  #tile
 
   constructor(cellElement, x, y) {
     this.#cellElement = cellElement
     this.#x = x
     this.#y = y
+  }
+
+  get tile() {
+    return this.#tile
+  }
+
+  set tile(value) {
+    this.#tile = value
+    if (value == null) return // means this cell has no tile anymore
+
+    // if tile has value (e.g. 2, 4, 8) set its position to same x,y as its Cell
+    this.#tile.x = this.#x
+    this.#tile.y = this.#y
   }
 }
 
