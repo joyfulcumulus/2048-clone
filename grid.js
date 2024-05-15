@@ -19,8 +19,8 @@ export default class Grid {
   // getter to return array of cells by Column for sliding up/down action
   get cellsByColumn() {
     return this.#cells.reduce((cellGrid, cell) => {
-      cellGrid[cell.x] = cellGrid[cell.x] || []
-      cellGrid[cell.x][cell.y] = cell
+      cellGrid[cell.x] = cellGrid[cell.x] || [] // init empty array for each col if not done
+      cellGrid[cell.x][cell.y] = cell // transpose the position of the cell in the new array inside cellGrid
       return cellGrid
     }, [])
   }
