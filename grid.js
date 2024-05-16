@@ -16,6 +16,12 @@ export default class Grid {
       return new Cell(cellElement, index % GRID_SIZE, Math.floor(index / GRID_SIZE))
     })
   }
+
+  // getter to return private variable cells
+  get cells() {
+    return this.#cells
+  }
+
   // getters to return array of cells by Column / Row for sliding up/down action
   get cellsByColumn() {
     return this.#cells.reduce((cellGrid, cell) => {
@@ -51,6 +57,7 @@ class Cell {
   #y
   #tile
   #mergeTile
+  // Uses #tile and #mergeTile private properties to store Tile objects on the cell, and control their properties
 
   constructor(cellElement, x, y) {
     this.#cellElement = cellElement
@@ -101,6 +108,14 @@ class Cell {
       (this.mergeTile == null && this.tile.value === tile.value)
     )
   }
+
+  mergeTiles() {
+    if (this.tile == null || this.mergeTile == null) return // nothing to merge if either values empty
+    this.tile.value = this.tile.value + this.mergeTile.value
+    this.mergeTile.remove() // remove Tile from HTML DOM (note: this is not remove method in MDN)
+    this.mergeTile = null // remove Tile in mergeTile property of this cell
+  }
+
 }
 
 function createCellElements(gridElement) {

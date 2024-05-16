@@ -12,6 +12,10 @@ export default class Tile {
     this.value = value // utilises value setter method
   }
 
+  get value() {
+    return this.#value
+  }
+
   // setter methods which will use CSS to place the tile on screen correctly
   set x(value) {
     this.#x = value
@@ -31,5 +35,10 @@ export default class Tile {
     const backgroundLightness = 100 - (power * 9) // 2048 = 2**11, starting no. is 2 = 2**1 so there are 10 shades of color
     this.#tileElement.style.setProperty("--background-lightness", `${backgroundLightness}%`)
     this.#tileElement.style.setProperty("--text-lightness", `${backgroundLightness <= 50 ? 90 : 10}%`) // if background is light, use dark text, vice versa
+  }
+
+  remove() {
+    // targets the exact HTML element in the Tile object and removes it
+    this.#tileElement.remove()
   }
 }

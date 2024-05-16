@@ -39,6 +39,8 @@ function handleInput(e) {
       setupInput() // wait for another user input if other keys pressed wrongly
       return
   }
+
+  grid.cells.forEach(cell => cell.mergeTiles()) // merge overlapping tiles on each cell if any
   setupInput() // after action done, wait for another user input
 }
 
@@ -83,7 +85,7 @@ function slideTiles(cells) {
       // if it's occupid, merge, else, move the tile over by reassigning it
       if (lastValidCell != null) {
         if (lastValidCell.tile != null) {
-          lastValidCell.mergeTile = cell.tile // assign the cell's tile info to lastValidCell.mergeTile property so it can merge
+          lastValidCell.mergeTile = cell.tile // update lastValidCell.mergeTile property so there are now 2 tiles on lastValidCell
         } else {
         lastValidCell.tile = cell.tile // no merging, just move the cell's tile info over
         }
