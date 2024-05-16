@@ -1,6 +1,12 @@
 import Grid from "./grid.js"
 import Tile from "./tile.js"
 
+// initialise variables to detect touch interaction on mobile
+let startX;
+let endX;
+let startY;
+let endY;
+
 // Get grid element from the HTML and create new Grid object in this HTML
 const gameBoard = document.getElementById("game-board")
 
@@ -19,6 +25,9 @@ setupInput()
 // Only after the movement of tiles is complete, we re-setup the event listener again
 function setupInput() {
   window.addEventListener("keydown", handleInput, { once: true})
+
+  window.addEventListener("touchstart", handleTouchStart, { once: true})
+  window.addEventListener("touchend", handleTouchInput, { once: true})
 }
 
 async function handleInput(e) {
@@ -53,6 +62,71 @@ async function handleInput(e) {
       break
     default:
       setupInput() // wait for another user input if other keys pressed wrongly
+      return
+  }
+
+  grid.cells.forEach(cell => cell.mergeTiles()) // merge overlapping tiles on each cell if any
+
+  const newTile = new Tile(gameBoard)
+  grid.randomEmptyCell().tile = newTile // add new tile to board after valid user input
+
+  // check if user has lost, if havent continue game to accept next user input
+  // if lost, wait for newTile to appear (animation finished), then pop up alert
+  if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+    newTile.waitForTransition(true).then(() => {
+      alert("You lose")
+    })
+    return
+  }
+  // if lost, wait for newTile animation to finish, then have alert
+
+  setupInput()
+}
+
+function handleTouchStart(e) {
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+}
+
+async function handleTouchInput(e) {
+  endX = e.changedTouches[0].clientX;
+  endY = e.changedTouches[0].clientY;
+
+  let swipeDistanceX = endX - startX;
+  let swipeDistanceY = endY - startY;
+  let swipeThreshold = 0.3 * Math.min(window.innerWidth, window.innerHeight);
+
+  switch (true) {
+    case Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX) && swipeDistanceY < -swipeThreshold:
+      if (!canMoveUp()) {
+        setupInput()
+        return
+      }
+      await moveUp()
+      break
+    case Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX) && swipeDistanceY > swipeThreshold:
+      if (!canMoveDown()) {
+        setupInput()
+        return
+      }
+      await moveDown()
+      break
+    case Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY) && swipeDistanceX < -swipeThreshold:
+      if (!canMoveLeft()) {
+        setupInput()
+        return
+      }
+      await moveLeft()
+      break
+    case Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY) && swipeDistanceX > swipeThreshold:
+      if (!canMoveRight()) {
+        setupInput()
+        return
+      }
+      await moveRight()
+      break
+    default:
+      setupInput(); // Wait for another user input if no swipe meeting threshold detected
       return
   }
 
