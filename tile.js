@@ -42,10 +42,11 @@ export default class Tile {
     this.#tileElement.remove()
   }
 
-  waitForTransition() {
+  waitForTransition(animation = false) {
     // return a promise. The executor function only has resolve method which will happen after transition complete
+    // can listen for 2 types of events depending on what argument is passed in
     return new Promise(resolve => {
-      this.#tileElement.addEventListener("transitionend", resolve, { once: true })
+      this.#tileElement.addEventListener(animation ? "animationend" : "transitionend", resolve, { once: true })
     })
   }
 }

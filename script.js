@@ -61,7 +61,16 @@ async function handleInput(e) {
   const newTile = new Tile(gameBoard)
   grid.randomEmptyCell().tile = newTile // add new tile to board after valid user input
 
-  setupInput() // after action done, wait for another user input
+  // check if user has lost, if havent continue game to accept next user input
+  if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+    newTile.waitForTransition(true).then(() => {
+      alert("You lose")
+    })
+    return
+  }
+  // if lost, wait for newTile animation to finish, then have alert
+
+  setupInput()
 }
 
 function moveUp() {
