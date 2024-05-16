@@ -13,6 +13,7 @@ body {
   margin: 0;
   font-size: 7.5vmin;
   overscroll-behavior: none;
+  overflow: hidden;
 }
 
 #game-board {
