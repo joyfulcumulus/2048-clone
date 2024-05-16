@@ -41,4 +41,11 @@ export default class Tile {
     // targets the exact HTML element in the Tile object and removes it
     this.#tileElement.remove()
   }
+
+  waitForTransition() {
+    // return a promise. The executor function only has resolve method which will happen after transition complete
+    return new Promise(resolve => {
+      this.#tileElement.addEventListener("transitionend", resolve, { once: true })
+    })
+  }
 }

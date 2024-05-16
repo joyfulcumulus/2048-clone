@@ -21,19 +21,19 @@ function setupInput() {
   window.addEventListener("keydown", handleInput, { once: true})
 }
 
-function handleInput(e) {
+async function handleInput(e) {
   switch (e.key) {
     case "ArrowUp":
-      moveUp()
+      await moveUp()
       break
     case "ArrowDown":
-      moveDown()
+      await moveDown()
       break
     case "ArrowLeft":
-      moveLeft()
+      await moveLeft()
       break
     case "ArrowRight":
-      moveRight()
+      await moveRight()
       break
     default:
       setupInput() // wait for another user input if other keys pressed wrongly
@@ -63,37 +63,44 @@ function moveRight() {
 }
 
 function slideTiles(cells) {
-  // for each cell i in the group (col / row)
-  //   1. check for each previous cell j, if can accept a tile
-  //   2. mark the cell that the tile can move to with lastValidCell
-  //   3. then move the tile / or leave it if cant
-  // repeat steps 1-3 for next cell
-  cells.forEach(group => {
-    for (let i = 1; i < group.length; i++) {
-      const cell = group[i]
-      if (cell.tile == null) continue // if cell has no tile, check next cell, skip code below
-      let lastValidCell
+  return Promise.all(
+    // for each cell i in the group (col / row)
+    //   1. check for each previous cell j, if can accept a tile
+    //   2. mark the cell that the tile can move to with lastValidCell
+    //   3. then move the tile / or leave it if cant
+    // repeat steps 1-3 for next cell
+    cells.flatMap(group => {
+      const promises = []
 
-      for (let j = i - 1; j >= 0; j--) {
-        const moveToCell = group[j]
-        if (!moveToCell.canAccept(cell.tile)) break // if moveToCell cannot accept a tile, break the loop
-        lastValidCell = moveToCell // if moveToCell can accept, mark lastValidCell position
-      }
+      for (let i = 1; i < group.length; i++) {
+        const cell = group[i]
+        if (cell.tile == null) continue // if cell has no tile, check next cell, skip code below
+        let lastValidCell
 
-      // if lastValidCell has a value (means there is a cell to move to)
-      // check if the cell is occupied by tile
-      // if it's occupid, merge, else, move the tile over by reassigning it
-      if (lastValidCell != null) {
-        if (lastValidCell.tile != null) {
-          lastValidCell.mergeTile = cell.tile // update lastValidCell.mergeTile property so there are now 2 tiles on lastValidCell
-        } else {
-        lastValidCell.tile = cell.tile // no merging, just move the cell's tile info over
+        for (let j = i - 1; j >= 0; j--) {
+          const moveToCell = group[j]
+          if (!moveToCell.canAccept(cell.tile)) break // if moveToCell cannot accept a tile, break the loop
+          lastValidCell = moveToCell // if moveToCell can accept, mark lastValidCell position
         }
-        // remove tile from current cell by setting null
-        cell.tile = null
+
+        // if lastValidCell has a value (means there is a cell to move to)
+        // check if the cell is occupied by tile
+        // if it's occupid, merge, else, move the tile over by reassigning it
+        if (lastValidCell != null) {
+          promises.push(cell.tile.waitForTransition()) // resolve promise each time transitionend
+          if (lastValidCell.tile != null) {
+            lastValidCell.mergeTile = cell.tile // update lastValidCell.mergeTile property so there are now 2 tiles on lastValidCell
+          } else {
+          lastValidCell.tile = cell.tile // no merging, just move the cell's tile info over
+          }
+          // remove tile from current cell by setting null
+          cell.tile = null
+        }
       }
-    }
-  })
+
+      return promises // after all waitForTransition() promises completed, return promise array
+    })
+  )
 }
 
 // Note: canAccept is a Cell class method
