@@ -11,12 +11,15 @@ const grid = new Grid(gameBoard)
 grid.randomEmptyCell().tile = new Tile(gameBoard)
 grid.randomEmptyCell().tile = new Tile(gameBoard)
 
-function setupInput() {
-  window.addEventListener("keydown", handleInput, { once: true})
-}
+// init first event listener for game start
+setupInput()
+
 // setupInput only invokes once after being added, because if handleInput function is
 // still ongoing, we dont want to allow the user to perform another keydown operation.
 // Only after the movement of tiles is complete, we re-setup the event listener again
+function setupInput() {
+  window.addEventListener("keydown", handleInput, { once: true})
+}
 
 function handleInput(e) {
   switch (e.key) {
@@ -43,6 +46,20 @@ function moveUp() {
   slideTiles(grid.cellsByColumn)
 }
 
+function moveDown() {
+  slideTiles(grid.cellsByColumn.map(column => [...column].reverse()))
+  // reverse direction of cells in each column before passing into slideTiles
+}
+
+function moveLeft() {
+  slideTiles(grid.cellsByRow)
+}
+
+function moveRight() {
+  slideTiles(grid.cellsByRow.map(row => [...row].reverse()))
+  // reverse direction of cells in each column before passing into slideTiles
+}
+
 function slideTiles(cells) {
   // for each cell i in the group (col / row)
   //   1. check for each previous cell j, if can accept a tile
@@ -52,6 +69,7 @@ function slideTiles(cells) {
   cells.forEach(group => {
     for (let i = 1; i < group.length; i++) {
       const cell = group[i]
+      if (cell.tile == null) continue // if cell has no tile, check next cell, skip code below
       let lastValidCell
 
       for (let j = i - 1; j >= 0; j--) {
@@ -65,9 +83,9 @@ function slideTiles(cells) {
       // if it's occupid, merge, else, move the tile over by reassigning it
       if (lastValidCell != null) {
         if (lastValidCell.tile != null) {
-          lastValidCell.mergeTile = cell.tile
+          lastValidCell.mergeTile = cell.tile // assign the cell's tile info to lastValidCell.mergeTile property so it can merge
         } else {
-        lastValidCell.tile = cell.tile
+        lastValidCell.tile = cell.tile // no merging, just move the cell's tile info over
         }
         // remove tile from current cell by setting null
         cell.tile = null

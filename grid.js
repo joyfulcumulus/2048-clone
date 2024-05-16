@@ -16,11 +16,19 @@ export default class Grid {
       return new Cell(cellElement, index % GRID_SIZE, Math.floor(index / GRID_SIZE))
     })
   }
-  // getter to return array of cells by Column for sliding up/down action
+  // getters to return array of cells by Column / Row for sliding up/down action
   get cellsByColumn() {
     return this.#cells.reduce((cellGrid, cell) => {
       cellGrid[cell.x] = cellGrid[cell.x] || [] // init empty array for each col if not done
       cellGrid[cell.x][cell.y] = cell // transpose the position of the cell in the new array inside cellGrid
+      return cellGrid
+    }, [])
+  }
+
+  get cellsByRow() {
+    return this.#cells.reduce((cellGrid, cell) => {
+      cellGrid[cell.y] = cellGrid[cell.y] || [] // init empty array for each col if not done
+      cellGrid[cell.y][cell.x] = cell // transpose the position of the cell in the new array inside cellGrid
       return cellGrid
     }, [])
   }
@@ -77,9 +85,10 @@ class Cell {
   }
 
   set mergeTile(value) {
-    this.#mergeTile = value
-    if (value == null) return
-    this.#mergeTile.x = this.#x
+    this.#mergeTile = value // can be a Tile object or null
+    if (value == null) return // stop merge if nothing to merge, guard clause
+
+    this.#mergeTile.x = this.#x // set same position as cell
     this.#mergeTile.y = this.#y
   }
 
