@@ -41,6 +41,10 @@ async function handleInput(e) {
   }
 
   grid.cells.forEach(cell => cell.mergeTiles()) // merge overlapping tiles on each cell if any
+
+  const newTile = new Tile(gameBoard)
+  grid.randomEmptyCell().tile = newTile // add new tile to board after valid user input
+
   setupInput() // after action done, wait for another user input
 }
 
