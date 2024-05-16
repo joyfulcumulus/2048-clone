@@ -45,6 +45,7 @@ export default class Tile {
   waitForTransition(animation = false) {
     // return a promise. The executor function only has resolve method which will happen after transition complete
     // can listen for 2 types of events depending on what argument is passed in
+    // resolve has no arguments. Promise fulfilled with undefined value just to signal async operation has ended
     return new Promise(resolve => {
       this.#tileElement.addEventListener(animation ? "animationend" : "transitionend", resolve, { once: true })
     })

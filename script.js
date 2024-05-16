@@ -62,6 +62,7 @@ async function handleInput(e) {
   grid.randomEmptyCell().tile = newTile // add new tile to board after valid user input
 
   // check if user has lost, if havent continue game to accept next user input
+  // if lost, wait for newTile to appear (animation finished), then pop up alert
   if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
     newTile.waitForTransition(true).then(() => {
       alert("You lose")
@@ -131,7 +132,6 @@ function slideTiles(cells) {
     })
   )
 }
-
 // Note: canAccept is a Cell class method
 
 function canMoveUp() {
@@ -151,10 +151,15 @@ function canMoveRight() {
 }
 
 function canMove(cells) {
+  // usage of some() means if true for at least 1 cell in 1 group, will return true
   return cells.some(group => {
     return group.some((cell, index) => {
+      // guard clauses: if cell is 1st pos, cannot move
+      // guard clauses: if no tile in cell, nothing to move
       if (index === 0) return false
       if (cell.tile == null) return false
+
+      // for each remaining cell in the group, check if preceding cell can accept it
       const moveToCell = group[index - 1]
       return moveToCell.canAccept(cell.tile)
     })
