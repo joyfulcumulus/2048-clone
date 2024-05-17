@@ -94,7 +94,7 @@ async function handleTouchInput(e) {
 
   let swipeDistanceX = endX - startX;
   let swipeDistanceY = endY - startY;
-  let swipeThreshold = 0.3 * Math.min(window.innerWidth, window.innerHeight);
+  let swipeThreshold = 0.2 * Math.min(window.innerWidth, window.innerHeight);
 
   switch (true) {
     case Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX) && swipeDistanceY < -swipeThreshold:
